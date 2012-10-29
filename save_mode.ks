@@ -18,6 +18,9 @@
 @history enabled=false output=false
 
 @iscript
+// システムボタンを使っていて、メッセージレイヤが表示されている時は onMessageHiddenStateChanged を呼び出します
+if(typeof(global.exsystembutton_object) != "undefined" && kag.fore.messages[0].visible)
+	exsystembutton_object.onMessageHiddenStateChanged(true);
 save.playing = 0;
 var elm = %["visible" => false];
 // 全ての前景レイヤを非表示にします
@@ -69,7 +72,7 @@ for(var i=0;i<kag.numMessageLayers;i++)
 ;ぺージ番号描画
 @if exp="save.maxpage > 0"
 	@eval exp="save.pagecount = 0"
-	@locate x="&save.page_basex + save.page_width * save.pagecount" y="&save.page_basey + save.page_height * save.pagecount"
+	@locate x="&save.page_basex" y="&save.page_basey"
 	@nowait
 	@eval exp="kag.tagHandlers.font(save.page_font)"
 	page
@@ -92,6 +95,24 @@ for(var i=0;i<kag.numMessageLayers;i++)
 		@endif
 		@endnowait
 	@jump storage=save_mode.ks target=*pagedraw cond="++save.pagecount < (save.maxpage + 1)"
+@endif
+; 選択肢で自動セーブ用
+@if exp="save.autosave"
+	@locate x="&save.page_basex + save.page_width * save.pagecount + 100" y="&save.page_basey + save.page_height * save.pagecount"
+	@nowait
+	@if exp="save.page != save.pagecount"
+		@link storage=save_mode.ks target=*sub_draw exp="&'save.page = ' + save.pagecount"
+		@eval exp="kag.tagHandlers.font(save.page_font)"
+		Auto
+		@resetfont
+		@endlink
+	@else
+		@eval exp="kag.tagHandlers.font(save.page_font)"
+		@font color=0x666666
+		Auto
+		@resetfont
+	@endif
+	@endnowait
 @endif
 
 @locate x=&save.close_x y=&save.close_y
@@ -161,9 +182,14 @@ close
 @s
 
 *back
-@tempload
+@tempload bgm=0
+@iscript
+// システムボタンを使っていて、コンフィグ画面を表示する前にメッセージレイヤが表示されていた時は onMessageHiddenStateChanged を呼び出します
+if(typeof(global.MoveMenu_object) != "undefined" && kag.fore.messages[0].visible)
+	MoveMenu_object.onMessageHiddenStateChanged(false);
+@endscript
 @unlocksnapshot
-;@rclick enabled=true jump=true storage=title.ks target=*title
+@rclick enabled=true jump=true storage=title.ks target=*title
 @history enabled=true output=true
 @return
 

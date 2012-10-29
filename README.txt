@@ -10,6 +10,7 @@
 機能
 変数を設定することでかなりレイアウトを好きに
 変更出来る
+選択肢で自動セーブも可能
 
 save_mode.ksの166行目の右クリックの設定を
 各自の環境にあわせてする
@@ -39,6 +40,7 @@ save.page_basey = 0;   //ページボタンの初期y座標
 save.page_width = 20;  //ページボタン間の幅
 save.page_height = 0;  //ページボタン間の高さ
 save.page_font = %['italic' => true]; //ページボタンのフォント
+save.autosave = 1; //選択肢でオートセーブをするか
 save.close_x=kag.scWidth-150; //閉じるのx座標
 save.close_y=0; //閉じるのy座標
 save.close_font = %['italic' => true]; //閉じるのフォント
@@ -51,3 +53,8 @@ save.maxpage = 3; //ページ数
 後はfirst.ksあたりで
 @call storage=save_mode_init.ks
 をして、save_mode.ks, load_mode.ksをあたまから呼び出せばいい
+
+@autosave
+を使えば、Autoページに勝手に順番に保存し、
+ページが一杯なら古いものから消していく
+選択肢で使ってくれ

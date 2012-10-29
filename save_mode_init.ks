@@ -27,6 +27,7 @@ save.page_basey = 0;   //ページボタンの初期y座標
 save.page_width = 20;  //ページボタン間の幅
 save.page_height = 0;  //ページボタン間の高さ
 save.page_font = %['italic' => true]; //ページボタンのフォント
+save.autosave = 1; //選択肢でオートセーブをするか
 save.close_x=kag.scWidth-150; //閉じるのx座標
 save.close_y=0; //閉じるのy座標
 save.close_font = %['italic' => true]; //閉じるのフォント
@@ -36,7 +37,7 @@ save.change_y=0; //y座標
 save.change_font = %['italic' => true]; //フォント
 save.maxpage = 3; //ページ数
 
-
+save.autocount = 1 + save.column*save.line*save.maxpage;
 save.maxpage -= 1;
 save.page = 0;
 // 日付を返す
@@ -54,6 +55,24 @@ function save_title(n){
 	// セーブデータの見出しを返す
 	return kag.getBookMarkPageName(n);
 }
+//一度だけ実行する
+if (sf.save_init === void){
+	sf.auto_save_count=0;
+	sf.save_init=1;
+}
+function auto_save(){
+	if (sf.auto_save_count > save.column*save.line - 1){
+		sf.auto_save_count=0;
+		kag.storeBookMark(save.autocount + sf.auto_save_count, false);
+	}else{
+		kag.storeBookMark(save.autocount + sf.auto_save_count, false);
+		sf.auto_save_count+=1;
+	}
+}
 @endscript
+
+@macro name=autosave        
+@save ask=false place=&auto_save()
+@endmacro
 
 @return

@@ -3,16 +3,14 @@
 
 *load_mode
 
-@call storage=load_mode.ks target=*load_draw
-@call storage=save_mode.ks target=*page_draw
-@call storage=load_mode.ks target=*change_draw
+@call storage=load_mode.ks target=*draw
 @s
 
 
 ;サブルーチン
 
 ;サムネイル描画
-*load_draw
+*draw
 @image layer=base storage=&save.load_base
 @layopt layer=0 visible=false
 @er
@@ -41,9 +39,62 @@
 		@endif
 	@jump storage=load_mode.ks target=*line cond="++save.temp_line < save.line"
 @jump storage=load_mode.ks target=*column cond="++save.temp_column < save.column"
-@return
 
-*change_draw
+;ぺージ番号描画
+@if exp="save.maxpage > 0"
+	@eval exp="save.pagecount = 0"
+	@locate x="&save.page_basex" y="&save.page_basey"
+	@nowait
+	@eval exp="kag.tagHandlers.font(save.page_font)"
+	page
+	@resetfont
+	@endnowait
+*pagedraw
+		@locate x="&save.page_basex + save.page_width * save.pagecount + 100" y="&save.page_basey + save.page_height * save.pagecount"
+		@nowait
+		@if exp="save.pagecount != save.page"
+			@link storage=load_mode.ks target=*sub_draw exp="&'save.page = ' + save.pagecount"
+			@eval exp="kag.tagHandlers.font(save.page_font)"
+			@emb exp="save.pagecount + 1"
+			@resetfont
+			@endlink
+		@else
+			@eval exp="kag.tagHandlers.font(save.page_font)"
+			@font color=0x666666
+			@emb exp="save.pagecount + 1"
+			@resetfont
+		@endif
+		@endnowait
+	@jump storage=load_mode.ks target=*pagedraw cond="++save.pagecount < (save.maxpage + 1)"
+@endif
+; 選択肢で自動セーブ用
+@if exp="save.autosave"
+	@locate x="&save.page_basex + save.page_width * save.pagecount + 100" y="&save.page_basey + save.page_height * save.pagecount"
+	@nowait
+	@if exp="save.page != save.pagecount"
+		@link storage=load_mode.ks target=*sub_draw exp="&'save.page = ' + save.pagecount"
+		@eval exp="kag.tagHandlers.font(save.page_font)"
+		Auto
+		@resetfont
+		@endlink
+	@else
+		@eval exp="kag.tagHandlers.font(save.page_font)"
+		@font color=0x666666
+		Auto
+		@resetfont
+	@endif
+	@endnowait
+@endif
+
+@locate x=&save.close_x y=&save.close_y
+@link storage=save_mode.ks target=*back
+@nowait
+@eval exp="kag.tagHandlers.font(save.close_font)"
+close
+@resetfont
+@endnowait
+@endlink
+
 @if exp="save.change && kag.canStore()"
 	@locate x=&save.change_x y=&save.change_y
 	@link storage=save_mode.ks target=*save_mode
@@ -72,7 +123,5 @@
 
 ;linkからサブルーチンをするため
 *sub_draw
-@call storage=load_mode.ks target=*load_draw
-@call storage=save_mode.ks target=*page_draw
-@call storage=load_mode.ks target=*change_draw
+@call storage=load_mode.ks target=*draw
 @s
