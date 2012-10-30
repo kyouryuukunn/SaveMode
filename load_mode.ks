@@ -25,7 +25,7 @@
 			@button graphic=&save.save_button storage=load_mode.ks target=*play exp="&'save.playing = ' + ( 1 + save.page*save.column*save.line + save.temp_column*save.line + save.temp_line )"
 			;サムネイルを表示
 			@pimage storage="&kag.getBookMarkFileNameAtNum(1 + save.page*save.column*save.line + save.temp_column*save.line + save.temp_line)" layer=base dx="&save.base_x + save.temp_column * save.width" dy="&save.base_y + save.temp_line * save.height"
-			@image storage=&save.new layer=0 page=fore visible=true left="&save.base_x + save.temp_column * save.width + scene.new_x" top="&save.base_y + save.temp_line * save.height + scene.new_y" cond="sf.save_new == 1 + save.page*save.column*save.line + save.temp_column*save.line + save.temp_line"
+			@image storage=&save.new layer=0 page=fore visible=true opacity=255 left="&save.base_x + save.temp_column * save.width + save.new_x" top="&save.base_y + save.temp_line * save.height +save.new_y" cond="sf.save_new == 1 + save.page*save.column*save.line + save.temp_column*save.line + save.temp_line"
 			@nowait
 			@eval exp="kag.tagHandlers.font(save.message_font)"
 			@locate x="&save.base_x + save.temp_column * save.width + save.message_x1" y="&save.base_y + save.temp_line * save.height + save.message_y1"
