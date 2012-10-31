@@ -19,7 +19,7 @@ save.message_y1 = 0; //セーブファイルの見出しのサムネイルからの相対y座標
 save.message_x2 = 10 + save.thumbnail_width; //セーブファイルの日付のサムネイルからの相対x座標
 save.message_y2 = save.thumbnail_height/2; //セーブファイルの日付のサムネイルからの相対y座標
 save.message_font = %['size' => 18, 'color' => 0xffffff]; // 情報表示のフォント
-save.new = 'checked'; //最新のセーブに表示するマーク画像
+save.new = 'new'; //最新のセーブに表示するマーク画像
 save.new_x = 0; //マークのサムネイルからの相対x座標
 save.new_y = 0; //マークのサムネイルからの相対y座標
 save.page_basex = kag.scWidth-400; //ページボタンの初期x座標
@@ -39,7 +39,6 @@ save.maxpage = 3; //ページ数
 
 save.autocount = 1 + save.column*save.line*save.maxpage;
 save.maxpage -= 1;
-save.page = 0;
 // 日付を返す
 function save_date(n){
 	var saveDate = kag.getBookMarkDate(n);  // セーブデータの日付を取得して saveDate に代入します
@@ -63,10 +62,14 @@ if (sf.save_init === void){
 function auto_save(){
 	if (sf.auto_save_count > save.column*save.line - 1){
 		sf.auto_save_count=0;
+		sf.save_new = save.autocount + sf.auto_save_count;
+		sf.save_page = save.maxpage + 1;
 		kag.storeBookMark(save.autocount + sf.auto_save_count, false);
 	}else{
-		kag.storeBookMark(save.autocount + sf.auto_save_count, false);
 		sf.auto_save_count+=1;
+		sf.save_new = save.autocount + sf.auto_save_count;
+		sf.save_page = save.maxpage + 1;
+		kag.storeBookMark(save.autocount + sf.auto_save_count, false);
 	}
 }
 @endscript

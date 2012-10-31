@@ -47,18 +47,18 @@ for(var i=0;i<kag.numMessageLayers;i++)
 *line
 		;透明なボタンを表示
 		@locate x="&save.base_x + save.temp_column * save.width" y="&save.base_y + save.temp_line * save.height"
-		@button graphic=&save.save_button storage=save_mode.ks target=*play exp="&'save.playing = ' + ( 1 + save.page*save.column*save.line + save.temp_column*save.line + save.temp_line )"
+		@button graphic=&save.save_button storage=save_mode.ks target=*play exp="&'save.playing = ' + ( 1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line )"
 		;セーブデータがあるか
-		@if exp="kag.getBookMarkDate(1 + save.page*save.column*save.line + save.temp_column*save.line + save.temp_line) != ''"
+		@if exp="kag.getBookMarkDate(1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line) != ''"
 			;サムネイルを表示
-			@pimage storage="&kag.getBookMarkFileNameAtNum(1 + save.page*save.column*save.line + save.temp_column*save.line + save.temp_line)" layer=base dx="&save.base_x + save.temp_column * save.width" dy="&save.base_y + save.temp_line * save.height"
-			@image storage=&save.new layer=0 page=fore opacity=255 visible=true left="&save.base_x + save.temp_column * save.width + save.new_x" top="&save.base_y + save.temp_line * save.height + save.new_y" cond="sf.save_new == 1 + save.page*save.column*save.line + save.temp_column*save.line + save.temp_line"
+			@pimage storage="&kag.getBookMarkFileNameAtNum(1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line)" layer=base dx="&save.base_x + save.temp_column * save.width" dy="&save.base_y + save.temp_line * save.height"
+			@image storage=&save.new layer=0 page=fore opacity=255 visible=true left="&save.base_x + save.temp_column * save.width + save.new_x" top="&save.base_y + save.temp_line * save.height + save.new_y" cond="sf.save_new == 1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line"
 			@nowait
 			@eval exp="kag.tagHandlers.font(save.message_font)"
 			@locate x="&save.base_x + save.temp_column * save.width + save.message_x1" y="&save.base_y + save.temp_line * save.height + save.message_y1"
-			@emb exp="save_title(1 + save.page*save.column*save.line + save.temp_column*save.line + save.temp_line)"
+			@emb exp="save_title(1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line)"
 			@locate x="&save.base_x + save.temp_column * save.width + save.message_x2" y="&save.base_y + save.temp_line * save.height + save.message_y2"
-			@emb exp="save_date(1 + save.page*save.column*save.line + save.temp_column*save.line + save.temp_line)"
+			@emb exp="save_date(1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line)"
 			@resetfont
 			@endnowait
 		@else
@@ -81,8 +81,8 @@ for(var i=0;i<kag.numMessageLayers;i++)
 *pagedraw
 		@locate x="&save.page_basex + save.page_width * save.pagecount + 100" y="&save.page_basey + save.page_height * save.pagecount"
 		@nowait
-		@if exp="save.pagecount != save.page"
-			@link storage=save_mode.ks target=*sub_draw exp="&'save.page = ' + save.pagecount"
+		@if exp="save.pagecount != sf.save_page"
+			@link storage=save_mode.ks target=*sub_draw exp="&'sf.save_page = ' + save.pagecount"
 			@eval exp="kag.tagHandlers.font(save.page_font)"
 			@emb exp="save.pagecount + 1"
 			@resetfont
@@ -100,8 +100,8 @@ for(var i=0;i<kag.numMessageLayers;i++)
 @if exp="save.autosave"
 	@locate x="&save.page_basex + save.page_width * save.pagecount + 100" y="&save.page_basey + save.page_height * save.pagecount"
 	@nowait
-	@if exp="save.page != save.pagecount"
-		@link storage=save_mode.ks target=*sub_draw exp="&'save.page = ' + save.pagecount"
+	@if exp="sf.save_page != save.pagecount"
+		@link storage=save_mode.ks target=*sub_draw exp="&'sf.save_page = ' + save.pagecount"
 		@eval exp="kag.tagHandlers.font(save.page_font)"
 		Auto
 		@resetfont
@@ -165,6 +165,7 @@ close
 	@else
 		; データをセーブします
 		@save place="&save.playing"
+		@eval exp="sf.save_new = save.playing"
 		; サムネイルの表示を更新します
 		@call storage=save_mode.ks target=*save_draw
 		@call storage=save_mode.ks target=*page_draw
