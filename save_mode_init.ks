@@ -66,10 +66,10 @@ function auto_save(){
 		sf.save_page = save.maxpage + 1;
 		kag.storeBookMark(save.autocount + sf.auto_save_count, false);
 	}else{
-		sf.auto_save_count+=1;
 		sf.save_new = save.autocount + sf.auto_save_count;
 		sf.save_page = save.maxpage + 1;
 		kag.storeBookMark(save.autocount + sf.auto_save_count, false);
+		sf.auto_save_count+=1;
 	}
 }
 @endscript
