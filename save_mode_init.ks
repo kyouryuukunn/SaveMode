@@ -2,8 +2,8 @@
 ;前処理と設定
 @iscript
 var save = %[];
-save.save_base = 'black'; //セーブ画面背景
-save.load_base = 'black'; //ロード画面背景
+save.save_base = 'black'; //セーブ画面背景、透明部分があれば、直前のゲーム画面が見える
+save.load_base = 'black'; //ロード画面背景、透明部分があれば、直前のゲーム画面が見える
 save.save_button = 'save_button'; //サムネイルと同じ大きさのボタン
 save.dummy = 'save_dummy'; //未セーブの時のサムネイル
 save.thumbnail_width  = 120; //サムネイルの幅
@@ -14,6 +14,11 @@ save.base_x = 30; //サムネイル初期x座標
 save.base_y = 80; //サムネイル初期y座標
 save.width  = save.thumbnail_width + 260; //サムネイルの列の幅
 save.height = save.thumbnail_height + 30; //サムネイルの行の幅
+save.message_only = 1; //セーブファイルの情報をサムネイルごとに表示するか、ひとつだけにするか
+save.message_only_x1 = 10; //セーブファイルの見出しのx座標
+save.message_only_y1 = kag.scHeight - 100; //セーブファイルの見出しのy座標
+save.message_only_x2 = 10; //セーブファイルの日付のx座標
+save.message_only_y2 = kag.scHeight - 50; //セーブファイルの日付のy座標
 save.message_x1 = 10 + save.thumbnail_width; //セーブファイルの見出しのサムネイルからの相対x座標
 save.message_y1 = 0; //セーブファイルの見出しのサムネイルからの相対y座標
 save.message_x2 = 10 + save.thumbnail_width; //セーブファイルの日付のサムネイルからの相対x座標
@@ -37,7 +42,7 @@ save.change_y=0; //y座標
 save.change_font = %['italic' => true]; //フォント
 save.maxpage = 3; //ページ数
 
-save.autocount = 1 + save.column*save.line*save.maxpage;
+
 save.maxpage -= 1;
 // 日付を返す
 function save_date(n){
@@ -50,32 +55,33 @@ function save_date(n){
 		return "%d/%d/%d/%02d:%02d".sprintf(d.getYear(), (d.getMonth() + 1), d.getDate(), d.getHours(), d.getMinutes());
 	}
 }
-function save_title(n){
-	// セーブデータの見出しを返す
-	return kag.getBookMarkPageName(n);
-}
 //一度だけ実行する
 if (sf.save_init === void){
-	sf.auto_save_count=0;
 	sf.save_init=1;
 }
-function auto_save(){
-	if (sf.auto_save_count > save.column*save.line - 1){
-		sf.auto_save_count=0;
-		sf.save_new = save.autocount + sf.auto_save_count;
-		sf.save_page = save.maxpage + 1;
-		kag.storeBookMark(save.autocount + sf.auto_save_count, false);
+//引き数のpageで番号の小さいものから順に
+//セーブしていく、ページが埋まったら、
+//同様の順に上書きしていく
+//countにはシステム変数名を指定
+function auto_save(page, count){
+	var start = 1 + save.column*save.line*(page-1);
+	if (sf[count] > save.column*save.line - 1){
+		sf[count]=0;
+		sf.save_new = start + sf[count];
+		sf.save_page = page - 1;
+		kag.storeBookMark(start + sf[count], false);
 	}else{
-		sf.save_new = save.autocount + sf.auto_save_count;
-		sf.save_page = save.maxpage + 1;
-		kag.storeBookMark(save.autocount + sf.auto_save_count, false);
-		sf.auto_save_count+=1;
+		sf.save_new = start + sf[count];
+		sf.save_page = page - 1;
+		kag.storeBookMark(start + sf[count], false);
+		sf[count]+=1;
 	}
 }
 @endscript
 
 @macro name=autosave        
-@save ask=false place=&auto_save()
+;Autoページに順番に記録する
+@eval exp="auto_save(save.maxpage + 2, 'auto_save_count')"
 @endmacro
 
 @return
