@@ -2,17 +2,17 @@
 ;‘Oˆ—‚Æİ’è
 @iscript
 var save = %[];
-save.save_base = 'black'; //ƒZ[ƒu‰æ–Ê”wŒiA“§–¾•”•ª‚ª‚ ‚ê‚ÎA’¼‘O‚ÌƒQ[ƒ€‰æ–Ê‚ªŒ©‚¦‚é
-save.load_base = 'black'; //ƒ[ƒh‰æ–Ê”wŒiA“§–¾•”•ª‚ª‚ ‚ê‚ÎA’¼‘O‚ÌƒQ[ƒ€‰æ–Ê‚ªŒ©‚¦‚é
+save.save_base = 'black'; //ƒZ[ƒu‰æ–Ê”wŒi
+save.load_base = 'black'; //ƒ[ƒh‰æ–Ê”wŒi
 save.save_button = 'save_button'; //ƒTƒ€ƒlƒCƒ‹‚Æ“¯‚¶‘å‚«‚³‚Ìƒ{ƒ^ƒ“
 save.dummy = 'save_dummy'; //–¢ƒZ[ƒu‚Ì‚ÌƒTƒ€ƒlƒCƒ‹
 save.thumbnail_width  = 120; //ƒTƒ€ƒlƒCƒ‹‚Ì•
 save.thumbnail_height =  90; //ƒTƒ€ƒlƒCƒ‹‚Æ‚‚³
-save.line   = 4; //ƒTƒ€ƒlƒCƒ‹‚Ìs”
-save.column = 2; //ƒTƒ€ƒlƒCƒ‹‚Ì—ñ”
+save.line   = 3; //ƒTƒ€ƒlƒCƒ‹‚Ìs”
+save.column = 4; //ƒTƒ€ƒlƒCƒ‹‚Ì—ñ”
 save.base_x = 30; //ƒTƒ€ƒlƒCƒ‹‰ŠúxÀ•W
 save.base_y = 80; //ƒTƒ€ƒlƒCƒ‹‰ŠúyÀ•W
-save.width  = save.thumbnail_width + 260; //ƒTƒ€ƒlƒCƒ‹‚Ì—ñ‚Ì•
+save.width  = save.thumbnail_width + 50; //ƒTƒ€ƒlƒCƒ‹‚Ì—ñ‚Ì•
 save.height = save.thumbnail_height + 30; //ƒTƒ€ƒlƒCƒ‹‚Ìs‚Ì•
 save.message_only = 1; //ƒZ[ƒuƒtƒ@ƒCƒ‹‚Ìî•ñ‚ğƒTƒ€ƒlƒCƒ‹‚²‚Æ‚É•\¦‚·‚é‚©A‚Ğ‚Æ‚Â‚¾‚¯‚É‚·‚é‚©
 save.message_only_x1 = 10; //ƒZ[ƒuƒtƒ@ƒCƒ‹‚ÌŒ©o‚µ‚ÌxÀ•W
@@ -23,24 +23,24 @@ save.message_x1 = 10 + save.thumbnail_width; //ƒZ[ƒuƒtƒ@ƒCƒ‹‚ÌŒ©o‚µ‚ÌƒTƒ€ƒlƒCƒ
 save.message_y1 = 0; //ƒZ[ƒuƒtƒ@ƒCƒ‹‚ÌŒ©o‚µ‚ÌƒTƒ€ƒlƒCƒ‹‚©‚ç‚Ì‘Š‘ÎyÀ•W
 save.message_x2 = 10 + save.thumbnail_width; //ƒZ[ƒuƒtƒ@ƒCƒ‹‚Ì“ú•t‚ÌƒTƒ€ƒlƒCƒ‹‚©‚ç‚Ì‘Š‘ÎxÀ•W
 save.message_y2 = save.thumbnail_height/2; //ƒZ[ƒuƒtƒ@ƒCƒ‹‚Ì“ú•t‚ÌƒTƒ€ƒlƒCƒ‹‚©‚ç‚Ì‘Š‘ÎyÀ•W
-save.message_font = %['size' => 18, 'color' => 0xffffff]; // î•ñ•\¦‚ÌƒtƒHƒ“ƒg
+save.message_font = %['size' => 25, 'color' => 0xffffff]; // î•ñ•\¦‚ÌƒtƒHƒ“ƒg
 save.new = 'new'; //ÅV‚ÌƒZ[ƒu‚É•\¦‚·‚éƒ}[ƒN‰æ‘œ
 save.new_x = 0; //ƒ}[ƒN‚ÌƒTƒ€ƒlƒCƒ‹‚©‚ç‚Ì‘Š‘ÎxÀ•W
 save.new_y = 0; //ƒ}[ƒN‚ÌƒTƒ€ƒlƒCƒ‹‚©‚ç‚Ì‘Š‘ÎyÀ•W
-save.page_basex = kag.scWidth-400; //ƒy[ƒWƒ{ƒ^ƒ“‚Ì‰ŠúxÀ•W
-save.page_basey = 0;   //ƒy[ƒWƒ{ƒ^ƒ“‚Ì‰ŠúyÀ•W
-save.page_width = 20;  //ƒy[ƒWƒ{ƒ^ƒ“ŠÔ‚Ì•
-save.page_height = 0;  //ƒy[ƒWƒ{ƒ^ƒ“ŠÔ‚Ì‚‚³
+save.page_basex = kag.scWidth-100; //ƒy[ƒWƒ{ƒ^ƒ“‚Ì‰ŠúxÀ•W
+save.page_basey = 100;   //ƒy[ƒWƒ{ƒ^ƒ“‚Ì‰ŠúyÀ•W
+save.page_width = 0;  //ƒy[ƒWƒ{ƒ^ƒ“ŠÔ‚Ì•
+save.page_height = 50;  //ƒy[ƒWƒ{ƒ^ƒ“ŠÔ‚Ì‚‚³
 save.page_font = %['italic' => true]; //ƒy[ƒWƒ{ƒ^ƒ“‚ÌƒtƒHƒ“ƒg
 save.autosave = 1; //‘I‘ğˆ‚ÅƒI[ƒgƒZ[ƒu‚ğ‚·‚é‚©
 save.close_x=kag.scWidth-150; //•Â‚¶‚é‚ÌxÀ•W
-save.close_y=0; //•Â‚¶‚é‚ÌyÀ•W
+save.close_y=kag.scHeight-50; //•Â‚¶‚é‚ÌyÀ•W
 save.close_font = %['italic' => true]; //•Â‚¶‚é‚ÌƒtƒHƒ“ƒg
 save.change = 1; //ƒZ[ƒuƒ[ƒh‰æ–Ê‚Å‘¼•û‚ÉˆÚ“®‚·‚é
 save.change_x=100; //xÀ•W
 save.change_y=0; //yÀ•W
 save.change_font = %['italic' => true]; //ƒtƒHƒ“ƒg
-save.maxpage = 3; //ƒy[ƒW”
+save.maxpage = 2; //ƒy[ƒW”
 
 
 save.maxpage -= 1;
@@ -75,6 +75,28 @@ function auto_save(page, count){
 		sf.save_page = page - 1;
 		kag.storeBookMark(start + sf[count], false);
 		sf[count]+=1;
+	}
+}
+function save_info_show(num){
+	if (save.message_only && kag.getBookMarkDate(num) != ''){
+		kag.tagHandlers.current(%['layer'=>'message' + (kag.numMessageLayers - 2)]);
+		kag.tagHandlers.er();
+		kag.tagHandlers.nowait();
+		kag.tagHandlers.font(save.message_font);
+		kag.tagHandlers.locate(%['x'=>save.message_only_x1, 'y'=>save.message_only_y1]);
+		kag.current.processCh(kag.getBookMarkPageName(num));
+		kag.tagHandlers.locate(%['x'=>save.message_only_x2, 'y'=>save.message_only_y2]);
+		kag.tagHandlers.ch(%['text'=>save_date(num)]);
+		kag.tagHandlers.resetfont();
+		kag.tagHandlers.endnowait();
+		kag.tagHandlers.current(%['layer'=>'message' + (kag.numMessageLayers - 1)]);
+	}
+}
+function save_info_del(){
+	if (save.message_only){
+		kag.tagHandlers.current(%['layer'=>'message' + (kag.numMessageLayers - 2)]);
+		kag.tagHandlers.er();
+		kag.tagHandlers.current(%['layer'=>'message' + (kag.numMessageLayers - 1)]);
 	}
 }
 @endscript

@@ -72,6 +72,8 @@ save.maxpage = 3; //ページ数
 後はfirst.ksあたりで
 @call storage=save_mode_init.ks
 をして、save_mode.ks, load_mode.ksをあたまから呼び出せばいい
+kag.canStore()の結果でタイトル画面にいるかどうか判断している
+のでちゃんとdisablestoreすること
 
 @autosave
 を使えば、Autoページに勝手に順番に保存し、

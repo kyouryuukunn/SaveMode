@@ -98,7 +98,7 @@ for(i=0;i<kag.numMessageLayers;i++)
 *line
 		;透明なボタンを表示
 		@locate x="&save.base_x + save.temp_column * save.width" y="&save.base_y + save.temp_line * save.height"
-		@button graphic=&save.save_button storage=save_mode.ks target=*play exp="&'save.playing = ' + ( 1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line )" onenter="&'save.temp_show = ' + ( 1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line ) + ', kag.process(\'save_mode.ks\', \'*show\')'" onleave="&'save.temp_show = ' + ( 1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line ) + ', kag.process(\'save_mode.ks\', \'*dishow\')'"
+			@button graphic=&save.save_button storage=save_mode.ks target=*play exp="&'save.playing = ' + ( 1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line )" onenter="&'save_info_show(' + ( 1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line ) + ')'" onleave="save_info_del()"
 		;セーブデータがあるか
 		@if exp="kag.getBookMarkDate(1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line) != ''"
 			;サムネイルを表示
@@ -191,30 +191,6 @@ close
 @eval exp="kag.fore.messages[kag.numMessageLayers - 1].focus()"
 @return
 
-*show
-;情報を表示
-@if exp="save.message_only && kag.getBookMarkDate(save.temp_show) != ''"
-	@current layer="&'message' + (kag.numMessageLayers - 2)"
-	@er
-	@nowait
-	@eval exp="kag.tagHandlers.font(save.message_font)"
-	@locate x="&save.message_only_x1" y="&save.message_only_y1"
-	@emb exp="kag.getBookMarkPageName(save.temp_show)"
-	@locate x="&save.message_only_x2" y="&save.message_only_y2"
-	@emb exp="save_date(save.temp_show)"
-	@resetfont
-	@endnowait
-	@current layer="&'message' + (kag.numMessageLayers - 1)"
-@endif
-@s
-*dishow
-@if exp="save.message_only"
-	@current layer="&'message' + (kag.numMessageLayers - 2)"
-	@er
-	@current layer="&'message' + (kag.numMessageLayers - 1)"
-@endif
-@s
-
 
 ; サムネイルがクリックされた時に実行されるサブルーチン
 *play
@@ -264,6 +240,6 @@ if(typeof(global.exsystembutton_object) != "undefined" && kag.fore.messages[0].v
 @endscript
 ;各自設定する
 ;@rclick enabled=true jump=true storage=title.ks target=*title
-@history enabled=true output=true
+@history enabled=true output=true cond="kag.canStore()"
 @return
 

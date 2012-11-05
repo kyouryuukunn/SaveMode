@@ -43,11 +43,12 @@ for (i = sf.save_page*save.column*save.line+1; i < 1+(sf.save_page+1)*save.colum
 		break;
 	}
 }
-if (i == 1+(sf.save_page+1)*save.column*save.line) i = sf.save_page*save.column*save.line+1;
-	i = i - sf.save_page*save.column*save.line;
+if (i == 1+(sf.save_page+1)*save.column*save.line)
+	i = sf.save_page*save.column*save.line+1;
 //現在のページに新しいセーブがあったらそこに移動
 if (sf.save_page*save.column*save.line < sf.save_new && sf.save_new < 1+(sf.save_page+1)*save.column*save.line)
 	i = sf.save_new;
+i = i - sf.save_page*save.column*save.line;
 
 //現在のページ内での行列を求める
 save.temp_line = i%save.line  == 0 ? save.line - 1 : i%save.line - 1;
@@ -76,7 +77,7 @@ kag.fore.base.cursorY = save.base_y + save.temp_line*save.height + 10;
 		@if exp="kag.getBookMarkDate(1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line) != ''"
 			;透明なボタンを表示
 			@locate x="&save.base_x + save.temp_column * save.width" y="&save.base_y + save.temp_line * save.height"
-			@button graphic=&save.save_button storage=load_mode.ks target=*play exp="&'save.playing = ' + ( 1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line )" onenter="&'save.temp_show = ' + ( 1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line ) + ', kag.process(\'save_mode.ks\', \'*show\')'" onleave="&'save.temp_show = ' + ( 1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line ) + ', kag.process(\'save_mode.ks\', \'*dishow\')'"
+			@button graphic=&save.save_button storage=load_mode.ks target=*play exp="&'save.playing = ' + ( 1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line )" onenter="&'save_info_show(' + ( 1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line ) + ')'" onleave="save_info_del()"
 			;サムネイルを表示
 			@pimage storage="&kag.getBookMarkFileNameAtNum(1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line)" layer="&kag.numCharacterLayers-2" dx="&save.base_x + save.temp_column * save.width" dy="&save.base_y + save.temp_line * save.height"
 			@image storage=&save.new layer="&kag.numCharacterLayers-1" page=fore visible=true left="&save.base_x + save.temp_column * save.width + save.new_x" top="&save.base_y + save.temp_line * save.height +save.new_y" cond="sf.save_new == 1 + sf.save_page*save.column*save.line + save.temp_column*save.line + save.temp_line"
