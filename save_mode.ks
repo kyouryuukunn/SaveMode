@@ -68,6 +68,9 @@ kag.fore.base.cursorY = save.base_y + save.temp_line*save.height + 10;
 // システムボタンを使っていて、メッセージレイヤが表示されている時は onMessageHiddenStateChanged を呼び出します
 if(typeof(global.exsystembutton_object) != "undefined" && kag.fore.messages[0].visible)
 	exsystembutton_object.onMessageHiddenStateChanged(true);
+// SetMessageOpacityを使っていて、メッセージレイヤが表示されている時は onMessageHiddenStateChanged を呼び出します
+if (typeof(global.SetMessageOpacity_object) != 'undefined' && kag.fore.messages[0].visible)
+	SetMessageOpacity_object.onMessageHiddenStateChanged(true);
 var i;
 var elm = %["visible" => false];
 // 全てのメッセージレイヤを非表示にします
@@ -234,9 +237,11 @@ close
 @tempload bgm=0
 @unlocksnapshot
 @iscript
-// システムボタンを使っていて、コンフィグ画面を表示する前にメッセージレイヤが表示されていた時は onMessageHiddenStateChanged を呼び出します
+//システムボタン、メッセージ枠ともに以前の可視、不可視を記録している
 if(typeof(global.exsystembutton_object) != "undefined" && kag.fore.messages[0].visible)
 	exsystembutton_object.onMessageHiddenStateChanged(false);
+if (typeof(global.SetMessageOpacity_object) != 'undefined' && kag.fore.messages[0].visible)
+	SetMessageOpacity_object.onMessageHiddenStateChanged(false);
 @endscript
 ;各自設定する
 ;@rclick enabled=true jump=true storage=title.ks target=*title
