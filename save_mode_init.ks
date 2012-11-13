@@ -2,8 +2,9 @@
 ;前処理と設定
 @iscript
 var save = %[];
-save.save_base = 'black'; //セーブ画面背景
-save.load_base = 'black'; //ロード画面背景
+//ここを書き換える↓------------------------------------------------------- 
+save.save_base = 'black'; //セーブ画面背景、透明部分があれば、直前のゲーム画面が見える
+save.load_base = 'black'; //ロード画面背景、透明部分があれば、直前のゲーム画面が見える
 save.save_button = 'save_button'; //サムネイルと同じ大きさのボタン
 save.dummy = 'save_dummy'; //未セーブの時のサムネイル
 save.thumbnail_width  = 120; //サムネイルの幅
@@ -41,7 +42,7 @@ save.change_x=100; //x座標
 save.change_y=0; //y座標
 save.change_font = %['italic' => true]; //フォント
 save.maxpage = 2; //ページ数
-
+//ここを書き換える↑------------------------------------------------------- 
 
 save.maxpage -= 1;
 // 日付を返す
