@@ -3,39 +3,8 @@
 
 *load_mode
 @iscript
-kag.fore.messages[kag.numMessageLayers - 1].onMouseWheel = function(shift, delta, x, y){
-	if (delta < 0){
-		if  (save.change){
-			if  (sf.save_page > save.maxpage){
-				sf.save_page = 0;
-			}else{
-				sf.save_page += 1;
-			}
-		}else{
-			if  (sf.save_page >= save.maxpage){
-				sf.save_page = 0;
-			}else{
-				sf.save_page += 1;
-			}
-		}
-		kag.process('load_mode.ks', '*sub_draw');
-	}else if(delta > 0){
-		if  (save.change){
-			if  (sf.save_page <= 0){
-				sf.save_page = save.maxpage + 1;
-			}else{
-				sf.save_page -= 1;
-			}
-		}else{
-			if  (sf.save_page <= 0){
-				sf.save_page = save.maxpage;
-			}else{
-				sf.save_page -= 1;
-			}
-		}
-		kag.process('load_mode.ks', '*sub_draw');
-	}
-};
+//マウスホイール用にセーブ画面がロード画面かの目印をつける
+save.in_save_mode = 0;
 //マウス自動移動
 var i;
 for (i = sf.save_page*save.column*save.line+1; i < 1+(sf.save_page+1)*save.column*save.line; i++){
@@ -173,10 +142,20 @@ close
 @unlocklink
 @if exp="sf.loadAsk==1"
 	@if exp="askYesNo('セーブデータをロードしますか？')"
-		; データをセーブします
+		; データをロードします
+		; マウスホイールの動作を戻す
+		@eval exp="kag.onMouseWheel = save.onMouseWheel_org"
+		;メニューからのセーブ、ロード有効化
+		@eval exp="kag.restoreMenu.enabled = true"
+		@eval exp="kag.storeMenu.enabled = true"
 		@load place="&save.playing"
 	@endif
 @else
+	; マウスホイールの動作を戻す
+	@eval exp="kag.onMouseWheel = save.onMouseWheel_org"
+	;メニューからのセーブ、ロード有効化
+	@eval exp="kag.restoreMenu.enabled = true"
+	@eval exp="kag.storeMenu.enabled = true"
 	@load place="&save.playing"
 @endif
 ;マウスホイールを使うために、フォーカス設定

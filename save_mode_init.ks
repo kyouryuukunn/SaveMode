@@ -100,6 +100,74 @@ function save_info_del(){
 		kag.tagHandlers.current(%['layer'=>'message' + (kag.numMessageLayers - 1)]);
 	}
 }
+//マウスホイール用関数
+save.onMouseWheel = function(shift, delta, x, y){
+	if (save.in_save_mode){
+		if (delta < 0){
+			if  (save.change){
+				if  (sf.save_page > save.maxpage){
+					sf.save_page = 0;
+				}else{
+					sf.save_page += 1;
+				}
+			}else{
+				if  (sf.save_page >= save.maxpage){
+					sf.save_page = 0;
+				}else{
+					sf.save_page += 1;
+				}
+			}
+			kag.process('save_mode.ks', '*sub_draw');
+		}else if(delta > 0){
+			if  (save.change){
+				if  (sf.save_page <= 0){
+					sf.save_page = save.maxpage + 1;
+				}else{
+					sf.save_page -= 1;
+				}
+			}else{
+				if  (sf.save_page <= 0){
+					sf.save_page = save.maxpage;
+				}else{
+					sf.save_page -= 1;
+				}
+			}
+			kag.process('save_mode.ks', '*sub_draw');
+		}
+	}else{
+		if (delta < 0){
+			if  (save.change){
+				if  (sf.save_page > save.maxpage){
+					sf.save_page = 0;
+				}else{
+					sf.save_page += 1;
+				}
+			}else{
+				if  (sf.save_page >= save.maxpage){
+					sf.save_page = 0;
+				}else{
+					sf.save_page += 1;
+				}
+			}
+			kag.process('load_mode.ks', '*sub_draw');
+		}else if(delta > 0){
+			if  (save.change){
+				if  (sf.save_page <= 0){
+					sf.save_page = save.maxpage + 1;
+				}else{
+					sf.save_page -= 1;
+				}
+			}else{
+				if  (sf.save_page <= 0){
+					sf.save_page = save.maxpage;
+				}else{
+					sf.save_page -= 1;
+				}
+			}
+			kag.process('load_mode.ks', '*sub_draw');
+		}
+	}
+} incontextof global;
 @endscript
 
 @macro name=autosave        

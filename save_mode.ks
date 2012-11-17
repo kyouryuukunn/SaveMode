@@ -3,39 +3,7 @@
 
 *save_mode
 @iscript
-kag.fore.messages[kag.numMessageLayers - 1].onMouseWheel = function(shift, delta, x, y){
-	if (delta < 0){
-		if  (save.change){
-			if  (sf.save_page > save.maxpage){
-				sf.save_page = 0;
-			}else{
-				sf.save_page += 1;
-			}
-		}else{
-			if  (sf.save_page >= save.maxpage){
-				sf.save_page = 0;
-			}else{
-				sf.save_page += 1;
-			}
-		}
-		kag.process('save_mode.ks', '*sub_draw');
-	}else if(delta > 0){
-		if  (save.change){
-			if  (sf.save_page <= 0){
-				sf.save_page = save.maxpage + 1;
-			}else{
-				sf.save_page -= 1;
-			}
-		}else{
-			if  (sf.save_page <= 0){
-				sf.save_page = save.maxpage;
-			}else{
-				sf.save_page -= 1;
-			}
-		}
-		kag.process('save_mode.ks', '*sub_draw');
-	}
-};
+
 //マウス自動移動
 var i;
 for (i = sf.save_page*save.column*save.line+1; i < 1+(sf.save_page+1)*save.column*save.line; i++){
@@ -52,13 +20,15 @@ save.temp_column = save.temp_line == save.line - 1 ? i/save.line - 1 : (int)(i/s
 
 kag.fore.base.cursorX = save.base_x + save.temp_column*save.width + 10;
 kag.fore.base.cursorY = save.base_y + save.temp_line*save.height + 10;
+//マウスホイール用にセーブ画面がロード画面かの目印をつける
+save.in_save_mode = 1;
 @endscript
 
 @call storage=save_mode.ks target=*draw
 @s
 
 
-;サブルーチン
+;セーブ、ロード共通サブルーチン
 *initialize
 @locksnapshot
 @tempsave
@@ -71,12 +41,19 @@ if(typeof(global.exsystembutton_object) != "undefined" && kag.fore.messages[0].v
 // SetMessageOpacityを使っていて、メッセージレイヤが表示されている時は onMessageHiddenStateChanged を呼び出します
 if (typeof(global.SetMessageOpacity_object) != 'undefined' && kag.fore.messages[0].visible)
 	SetMessageOpacity_object.onMessageHiddenStateChanged(true);
-var i;
-var elm = %["visible" => false];
 // 全てのメッセージレイヤを非表示にします
-for(i=0;i<kag.numMessageLayers;i++)
-	kag.fore.messages[i].setOptions(elm);
+for(var i=0;i<kag.numMessageLayers;i++)
+	kag.fore.messages[i].setOptions(%[visible:false]);
 
+//マウスホイールの動作を一時的に変える
+save.onMouseWheel_org = kag.onMouseWheel;
+kag.onMouseWheel = function(){
+	save.onMouseWheel_org(...);
+	save.onMouseWheel(...);
+} incontextof kag;
+//セーブ、ロード画面ではメニューからのセーブ、ロード無効化
+kag.restoreMenu.enabled = false;
+kag.storeMenu.enabled = false;
 @endscript
 @laycount layers="&kag.numCharacterLayers + 2" messages="&kag.numMessageLayers + 2"
 ;すべてのレイヤより上に表示
@@ -242,6 +219,11 @@ if(typeof(global.exsystembutton_object) != "undefined" && kag.fore.messages[0].v
 	exsystembutton_object.onMessageHiddenStateChanged(false);
 if (typeof(global.SetMessageOpacity_object) != 'undefined' && kag.fore.messages[0].visible)
 	SetMessageOpacity_object.onMessageHiddenStateChanged(false);
+//マウスホイールの動作を戻す
+kag.onMouseWheel = save.onMouseWheel_org;
+//メニューからのセーブ、ロード有効化
+kag.restoreMenu.enabled = true;
+kag.storeMenu.enabled = true;
 @endscript
 ;各自設定する
 ;@rclick enabled=true jump=true storage=title.ks target=*title
