@@ -70,26 +70,28 @@ kag.fore.base.cursorY = save.base_y + save.temp_line*save.height + 10;
 ;ぺージ番号描画
 @if exp="save.maxpage > 0"
 	@eval exp="save.pagecount = 0"
-	;@locate x="&save.page_basex" y="&save.page_basey"
-	;@nowait
-	;@eval exp="kag.tagHandlers.font(save.page_font)"
-	;page
-	;@resetfont
-	;@endnowait
 *pagedraw
 		@locate x="&save.page_basex + save.page_width * save.pagecount" y="&save.page_basey + save.page_height * save.pagecount"
 		@nowait
 		@if exp="save.pagecount != sf.save_page"
-			@link storage=load_mode.ks target=*sub_draw exp="&'sf.save_page = ' + save.pagecount"
-			@eval exp="kag.tagHandlers.font(save.page_font)"
-			@emb exp="save.pagecount + 1"
-			@resetfont
-			@endlink
+			@if exp="save.page_cg.count > 0"
+				@button storage=load_mode.ks target=*sub_draw graphic="&save.page_cg[save.pagecount]" exp="&'sf.save_page = ' + save.pagecount"
+			@else
+				@link storage=load_mode.ks target=*sub_draw exp="&'sf.save_page = ' + save.pagecount"
+				@eval exp="kag.tagHandlers.font(save.page_font)"
+				@emb exp="save.pagecount + 1"
+				@resetfont
+				@endlink
+			@endif
 		@else
-			@eval exp="kag.tagHandlers.font(save.page_font)"
-			@font color=0x666666
-			@emb exp="save.pagecount + 1"
-			@resetfont
+			@if exp="save.page_cg.count > 0"
+				@pimage dx="&save.page_basex + save.page_width * save.pagecount" dy="&save.page_basey + save.page_height * save.pagecount" storage="&save.nowpage_cg[save.pagecount]" layer="&kag.numCharacterLayers-2"
+			@else
+				@eval exp="kag.tagHandlers.font(save.page_font)"
+				@font color=0x666666
+				@emb exp="save.pagecount + 1"
+				@resetfont
+			@endif
 		@endif
 		@endnowait
 	@jump storage=load_mode.ks target=*pagedraw cond="++save.pagecount < (save.maxpage + 1)"
@@ -99,38 +101,54 @@ kag.fore.base.cursorY = save.base_y + save.temp_line*save.height + 10;
 	@locate x="&save.page_basex + save.page_width * save.pagecount" y="&save.page_basey + save.page_height * save.pagecount"
 	@nowait
 	@if exp="sf.save_page != save.pagecount"
-		@link storage=load_mode.ks target=*sub_draw exp="&'sf.save_page = ' + save.pagecount"
-		@eval exp="kag.tagHandlers.font(save.page_font)"
-		Auto
-		@resetfont
-		@endlink
+		@if exp="save.page_cg.count > 0"
+			@button storage=load_mode.ks target=*sub_draw graphic="&save.page_cg[save.pagecount]" exp="&'sf.save_page = ' + save.pagecount"
+		@else
+			@link storage=load_mode.ks target=*sub_draw exp="&'sf.save_page = ' + save.pagecount"
+			@eval exp="kag.tagHandlers.font(save.page_font)"
+			Auto
+			@resetfont
+			@endlink
+		@endif
 	@else
-		@eval exp="kag.tagHandlers.font(save.page_font)"
-		@font color=0x666666
-		Auto
-		@resetfont
+		@if exp="save.page_cg.count > 0"
+			@pimage dx="&save.page_basex + save.page_width * save.pagecount" dy="&save.page_basey + save.page_height * save.pagecount" storage=&save.nowpage_cg[save.pagecount] layer="&kag.numCharacterLayers-2"
+		@else
+			@eval exp="kag.tagHandlers.font(save.page_font)"
+			@font color=0x666666
+			Auto
+			@resetfont
+		@endif
 	@endif
 	@endnowait
 @endif
 
 @locate x=&save.close_x y=&save.close_y
-@link storage=save_mode.ks target=*back
-@nowait
-@eval exp="kag.tagHandlers.font(save.close_font)"
-close
-@resetfont
-@endnowait
-@endlink
-
-@if exp="save.change && kag.canStore()"
-	@locate x=&save.change_x y=&save.change_y
-	@link storage=save_mode.ks target=*save_mode
+@if exp="save.close_button != ''"
+	@button storage=save_mode.ks target=*back graphic="&save.close_button"
+@else
+	@link storage=save_mode.ks target=*back
 	@nowait
-	@eval exp="kag.tagHandlers.font(save.change_font)"
-	セーブ
+	@eval exp="kag.tagHandlers.font(save.close_font)"
+	close
 	@resetfont
 	@endnowait
 	@endlink
+@endif
+
+@if exp="save.change && kag.canStore()"
+	@locate x=&save.change_x y=&save.change_y
+	@if exp="save.change_to_save_button != ''"
+		@button storage=save_mode.ks target=*save_mode graphic="&save.change_to_save_button"
+	@else
+		@link storage=save_mode.ks target=*save_mode
+		@nowait
+		@eval exp="kag.tagHandlers.font(save.change_font)"
+		セーブ
+		@resetfont
+		@endnowait
+		@endlink
+	@endif
 @endif
 
 ;マウスホイールを使うために、フォーカス設定

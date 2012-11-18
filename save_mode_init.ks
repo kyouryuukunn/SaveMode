@@ -32,12 +32,19 @@ save.page_basex = kag.scWidth-100; //ページボタンの初期x座標
 save.page_basey = 100;   //ページボタンの初期y座標
 save.page_width = 0;  //ページボタン間の幅
 save.page_height = 50;  //ページボタン間の高さ
-save.page_font = %['italic' => true]; //ページボタンのフォント
+save.page_cg = ['1', '2', 'Auto'];  	//ページボタンに使用するボタン画像, この配列が空なら文字そうでないなら画像を表示する
+					//例 save.page_cg = ['1', '2'] 前から順に使用する分だけ指定する(Autoぺージを使用するならそれも最後指定する)
+save.nowpage_cg = ['off_1', 'off_2', 'off_Auto'];	//ページボタンに画像を使用するときはここに現在のページの画像を指定する
+save.page_font = %['italic' => true];  //ページボタンに文字を使うときのフォント
 save.autosave = 1; //選択肢でオートセーブをするか
 save.close_x=kag.scWidth-150; //閉じるのx座標
 save.close_y=kag.scHeight-50; //閉じるのy座標
-save.close_font = %['italic' => true]; //閉じるのフォント
-save.change = 1; //セーブロード画面で他方に移動する
+save.close_button = '';	//閉じるにボタン画像を使用するなら指定する。空のときは文字を使う
+save.close_font = %['italic' => true];	//閉じるに文字を使用するときのフォント
+					//(ユーザーがフォントを変更すると不味いのでちゃんと指定すること)
+save.change = 1; //セーブロード画面で他方に移動するボタンを表示するか
+save.change_to_save_button = '';	//ボタン画像を使用するなら指定する。空のときは文字を使う
+save.change_to_load_button = '';	//ボタン画像を使用するなら指定する。空のときは文字を使う
 save.change_x=100; //x座標
 save.change_y=0; //y座標
 save.change_font = %['italic' => true]; //フォント

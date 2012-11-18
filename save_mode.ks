@@ -55,14 +55,14 @@ kag.onMouseWheel = function(){
 kag.restoreMenu.enabled = false;
 kag.storeMenu.enabled = false;
 @endscript
-@laycount layers="&kag.numCharacterLayers + 2" messages="&kag.numMessageLayers + 2"
+@laycount layers="&kag.numCharacterLayers + 2" messages="&kag.numMessageLayers + 1"
 ;すべてのレイヤより上に表示
+;背景
 @layopt index="&2000000+100" layer="&kag.numCharacterLayers-2"
+;Newマーク
 @layopt index="&2000000+101" layer="&kag.numCharacterLayers-1"
 @layopt index="&2000000+103" layer="&'message' + (kag.numMessageLayers-1)"
-@layopt index="&2000000+103" layer="&'message' + (kag.numMessageLayers-2)"
 @position opacity=0 marginb=0 margint=0 marginl=0 marginr=0 width=&kag.scWidth height=&kag.scHeight top=0 left=0 layer="&'message' + (kag.numMessageLayers - 1)" visible=true
-@position opacity=0 marginb=0 margint=0 marginl=0 marginr=0 width=&kag.scWidth height=&kag.scHeight top=0 left=0 layer="&'message' + (kag.numMessageLayers - 2)" visible=true
 @current layer="&'message' + (kag.numMessageLayers - 1)"
 @return
 
@@ -104,26 +104,28 @@ kag.storeMenu.enabled = false;
 ;ぺージ番号描画
 @if exp="save.maxpage > 0"
 	@eval exp="save.pagecount = 0"
-	;@locate x="&save.page_basex" y="&save.page_basey"
-	;@nowait
-	;@eval exp="kag.tagHandlers.font(save.page_font)"
-	;page
-	;@resetfont
-	;@endnowait
 *pagedraw
 		@locate x="&save.page_basex + save.page_width * save.pagecount" y="&save.page_basey + save.page_height * save.pagecount"
 		@nowait
 		@if exp="save.pagecount != sf.save_page"
-			@link storage=save_mode.ks target=*sub_draw exp="&'sf.save_page = ' + save.pagecount"
-			@eval exp="kag.tagHandlers.font(save.page_font)"
-			@emb exp="save.pagecount + 1"
-			@resetfont
-			@endlink
+			@if exp="save.page_cg.count > 0"
+				@button storage=save_mode.ks target=*sub_draw graphic="&save.page_cg[save.pagecount]" exp="&'sf.save_page = ' + save.pagecount"
+			@else
+				@link storage=save_mode.ks target=*sub_draw exp="&'sf.save_page = ' + save.pagecount"
+				@eval exp="kag.tagHandlers.font(save.page_font)"
+				@emb exp="save.pagecount + 1"
+				@resetfont
+				@endlink
+			@endif
 		@else
-			@eval exp="kag.tagHandlers.font(save.page_font)"
-			@font color=0x666666
-			@emb exp="save.pagecount + 1"
-			@resetfont
+			@if exp="save.page_cg.count > 0"
+				@pimage dx="&save.page_basex + save.page_width * save.pagecount" dy="&save.page_basey + save.page_height * save.pagecount" storage=&save.nowpage_cg[save.pagecount] layer="&kag.numCharacterLayers-2"
+			@else
+				@eval exp="kag.tagHandlers.font(save.page_font)"
+				@font color=0x666666
+				@emb exp="save.pagecount + 1"
+				@resetfont
+			@endif
 		@endif
 		@endnowait
 	@jump storage=save_mode.ks target=*pagedraw cond="++save.pagecount < (save.maxpage + 1)"
@@ -133,38 +135,54 @@ kag.storeMenu.enabled = false;
 	@locate x="&save.page_basex + save.page_width * save.pagecount" y="&save.page_basey + save.page_height * save.pagecount"
 	@nowait
 	@if exp="sf.save_page != save.pagecount"
-		@link storage=save_mode.ks target=*sub_draw exp="&'sf.save_page = ' + save.pagecount"
-		@eval exp="kag.tagHandlers.font(save.page_font)"
-		Auto
-		@resetfont
-		@endlink
+		@if exp="save.page_cg.count > 0"
+			@button storage=save_mode.ks target=*sub_draw graphic="&save.page_cg[save.pagecount]" exp="&'sf.save_page = ' + save.pagecount"
+		@else
+			@link storage=save_mode.ks target=*sub_draw exp="&'sf.save_page = ' + save.pagecount"
+			@eval exp="kag.tagHandlers.font(save.page_font)"
+			Auto
+			@resetfont
+			@endlink
+		@endif
 	@else
-		@eval exp="kag.tagHandlers.font(save.page_font)"
-		@font color=0x666666
-		Auto
-		@resetfont
+		@if exp="save.page_cg.count > 0"
+			@pimage dx="&save.page_basex + save.page_width * save.pagecount" dy="&save.page_basey + save.page_height * save.pagecount" storage=&save.nowpage_cg[save.pagecount] layer="&kag.numCharacterLayers-2"
+		@else
+			@eval exp="kag.tagHandlers.font(save.page_font)"
+			@font color=0x666666
+			Auto
+			@resetfont
+		@endif
 	@endif
 	@endnowait
 @endif
 
 @locate x=&save.close_x y=&save.close_y
-@link storage=save_mode.ks target=*back
-@nowait
-@eval exp="kag.tagHandlers.font(save.close_font)"
-close
-@resetfont
-@endnowait
-@endlink
-
-@if exp=save.change
-	@locate x=&save.change_x y=&save.change_y
-	@link storage=load_mode.ks target=*load_mode
+@if exp="save.close_button != ''"
+	@button storage=save_mode.ks target=*back graphic="&save.close_button"
+@else
+	@link storage=save_mode.ks target=*back
 	@nowait
-	@eval exp="kag.tagHandlers.font(save.change_font)"
-	ロード
+	@eval exp="kag.tagHandlers.font(save.close_font)"
+	close
 	@resetfont
 	@endnowait
 	@endlink
+@endif
+
+@if exp=save.change
+	@locate x=&save.change_x y=&save.change_y
+	@if exp="save.change_to_load_button != ''"
+		@button storage=load_mode.ks target=*load_mode graphic="&save.change_to_load_button"
+	@else
+		@link storage=load_mode.ks target=*load_mode
+		@nowait
+		@eval exp="kag.tagHandlers.font(save.change_font)"
+		ロード
+		@resetfont
+		@endnowait
+		@endlink
+	@endif
 @endif
 
 ;マウスホイールを使うために、フォーカス設定
