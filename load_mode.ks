@@ -23,8 +23,15 @@ i = i - sf.save_page*save.column*save.line;
 save.temp_line = i%save.line  == 0 ? save.line - 1 : i%save.line - 1;
 save.temp_column = save.temp_line == save.line - 1 ? i/save.line - 1 : (int)(i/save.line);
 
-kag.fore.base.cursorX = save.base_x + save.temp_column*save.width + 10;
-kag.fore.base.cursorY = save.base_y + save.temp_line*save.height + 10;
+if (typeof(global.MoveMouseCursorPlugin_object) != 'undefined')
+{
+	MouseCursorMover.set(%['layer'=>kag.fore.base,'time'=>100, 'x'=>save.base_x + save.temp_column*save.width + 10, 'y'=>save.base_y + save.temp_line*save.height + 10]);
+}
+else
+{
+	kag.fore.base.cursorX = save.base_x + save.temp_column*save.width + 10;
+	kag.fore.base.cursorY = save.base_y + save.temp_line*save.height + 10;
+}
 @endscript
 
 @call storage=load_mode.ks target=*draw
